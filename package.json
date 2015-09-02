@@ -3,8 +3,28 @@
   "version": "0.1.0",
   "description": "A selection of Brazilian Portuguese words that are good enough to be used as a BIP-0039 wordlist",
   "main": "index.js",
+  "config": {
+      "downloadsPath": "./downloads",
+      "listsPath": "./lists",
+      "androidDictUrl": "https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+archive/master/dictionaries.tar.gz",
+      "bip39EnglishDictUrl": "https://raw.githubusercontent.com/fczuardi/bips/master/bip-0039/english.txt",
+      "bip39SpanishDictUrl": "https://raw.githubusercontent.com/fczuardi/bips/master/bip-0039/spanish.txt",
+      "bip39FrenchDictUrl": "https://raw.githubusercontent.com/fczuardi/bips/master/bip-0039/french.txt"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run clean && npm run download && npm run csv:a && npm run filter:a",
+    "clean": "rm -rf $npm_package_config_downloadsPath $npm_package_config_listsPath",
+    "download": "npm run getdict:bip39 && npm run getdict:android",
+    "csv:a": "cat $npm_package_config_downloadsPath/pt_BR_wordlist.combined | grep 'word=a[^áéíóúâêôãõç]\\{9,12\\},flags=,' |sed -e 's:originalFreq=::' -e 's: word=::' |sort -t, -k4 -rn > $npm_package_config_listsPath/a.csv",
+    "filter:a": "npm run filter:en:a && npm run filter:sp:a && npm run filter:fr:a",
+    "getdict:bip39": "cd $npm_package_config_downloadsPath && curl -O $npm_package_config_bip39EnglishDictUrl && curl -O $npm_package_config_bip39SpanishDictUrl && curl -O $npm_package_config_bip39FrenchDictUrl",
+    "getdict:android": "cd $npm_package_config_downloadsPath && curl -O $npm_package_config_androidDictUrl",
+    "filter:en:a": "cat $npm_package_config_downloadsPath/english.txt|grep '^a'| sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/a_en_pattern && grep -vf /tmp/a_en_pattern $npm_package_config_listsPath/a.csv > $npm_package_config_listsPath/a-no_en.csv",
+    "filter:sp:a": "cat $npm_package_config_downloadsPath/spanish.txt|grep '^a'| sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/a_sp_pattern && grep -vf /tmp/a_sp_pattern $npm_package_config_listsPath/a-no_en.csv > $npm_package_config_listsPath/a-no_en-no_sp.csv",
+    "filter:fr:a": "cat $npm_package_config_downloadsPath/french.txt|grep '^a'| sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/a_fr_pattern && grep -vf /tmp/a_fr_pattern $npm_package_config_listsPath/a-no_en-no_sp.csv > $npm_package_config_listsPath/a-no_en-no_sp-no_fr.csv",
+    "precsv:a":"mkdir -p $npm_package_config_listsPath",
+    "predownload": "mkdir -p $npm_package_config_downloadsPath",
+    "postgetdict:android": "cd $npm_package_config_downloadsPath && tar -zxvf dictionaries.tar.gz pt_BR* && gunzip pt_BR*.gz"
   },
   "repository": {
     "type": "git",
