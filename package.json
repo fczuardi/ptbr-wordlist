@@ -1,0 +1,28 @@
+{
+  "name": "ptbr-wordlist",
+  "version": "0.1.0",
+  "description": "A selection of Brazilian Portuguese words that are good enough to be used as a BIP-0039 wordlist",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fczuardi/ptbr-wordlist.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "bip39",
+    "ptbr",
+    "wordlist",
+    "mnemonic",
+    "portuguese",
+    "pt_BR"
+  ],
+  "author": "Fabricio C Zuardi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fczuardi/ptbr-wordlist/issues"
+  },
+  "homepage": "https://github.com/fczuardi/ptbr-wordlist#readme"
+}
