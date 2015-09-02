@@ -2,7 +2,7 @@
 
 ## Objectives
 
-The idea is to build a selection of **2048** Brazilian Portuguese words that are
+The idea is to build a selection of Brazilian Portuguese words that are
 **good enough** to be used on computer-generated mnemonic pasphrases, such as 
 the ones described in the [BIP-0039 draft][bip39] and adopted by some
 cryptocurrencies clients and wallets.
@@ -32,7 +32,7 @@ the Discussion section below).
 There is an [ongoing discussion about it at the bitcointalk forum][forumthread],
 please drop by and say hello if you want to contribute :)
 
-
+    
 [androidwords]: https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/master/dictionaries/
 [bip39]: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
 [forumthread]: https://bitcointalk.org/index.php?topic=1167861.0
