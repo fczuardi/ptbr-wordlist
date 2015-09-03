@@ -114,7 +114,7 @@ of ```downloads/spanish.txt```
     $ grep -vf /tmp/a_sp_pattern lists/a-no_en.csv > lists/a-no_en-no_sp.csv
 
 
-### filter:fr:a
+### ```filter:fr:a```
 
 Write a file named ```lists/a-no_en-no_sp-no_fr.csv``` that is 
 ```lists/a-no_en-no_sp.csv``` without the lines containing words 
