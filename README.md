@@ -71,13 +71,12 @@ Download the pt_BR dictionary csv from Google's Android repository
     $ curl -O https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+archive/master/dictionaries.tar.gz
     $ tar -zxvf dictionaries.tar.gz pt_BR* && gunzip pt_BR*.gz
 
-### csv:a
+### csv
 
-Write a file named ```lists/a.csv``` that is the downloaded Android dictionary
+Write a file named ```lists/all.csv``` that is the downloaded Android dictionary
 filtered to display only:
 
-- words starting with 'a'
-- without any of the following letters: áéíóúâêôãõç 
+- words without any of the following letters: áéíóúâêôãõç 
 - that has 5-8 letters
 - without any flags (flags=,), so, no adult or offensive words
 - sorted by the 4th column (originalFreq)
@@ -85,49 +84,73 @@ filtered to display only:
 **Equivalent shell:**
 
     $ cat downloads/pt_BR_wordlist.combined | \
-    grep "word=a[^áéíóúâêôãõç]\{9,12\},flags=," | \
-    sed -e 's:originalFreq=::' -e 's: word=::' | \
-    sort -t, -k4 -rn >lists/a.csv
+    grep -E 'word=[^áéíóúâêôãõç,]{5,8},' | \
+    sed -e 's:originalFreq=::' -e 's: word=::' -e 's:f=.*,::'| \
+    sort -t, -k2 -rn >lists/all.csv
 
-### filter:en:a
+### filter:en
 
-Write a file named ```lists/a-no_en.csv``` that is ```lists/a.csv``` without
+Write a file named ```lists/all-no_en.csv``` that is ```lists/all.csv``` without
 the lines containing words of ```downloads/english.txt```
 
 **Equivalent shell:**
 
     $ cat downloads/english.txt|grep '^a'| \
-    sed -e 's:^\(.*\):\^\1,:' > /tmp/a_en_pattern
-    $ grep -vf /tmp/a_en_pattern lists/a.csv > lists/a-no_en.csv
+    sed -e 's:^\(.*\):\^\1,:' > /tmp/all_en_pattern
+    $ grep -vf /tmp/all_en_pattern lists/all.csv > lists/all-no_en.csv
 
 
-### filter:sp:a
+### filter:sp
 
-Write a file named ```lists/a-no_en-no_sp.csv``` that is 
+Write a file named ```lists/all-no_en-no_sp.csv``` that is 
 ```lists/a-no_en.csv``` without the lines containing words 
 of ```downloads/spanish.txt```
 
 **Equivalent shell:**
 
     $ cat downloads/spanish.txt|grep '^a'| \
-    sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/a_sp_pattern 
-    $ grep -vf /tmp/a_sp_pattern lists/a-no_en.csv > lists/a-no_en-no_sp.csv
+    sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/all_sp_pattern 
+    $ grep -vf /tmp/all_sp_pattern lists/all-no_en.csv > lists/all-no_en-no_sp.csv
 
 
-### filter:fr:a
+### filter:fr
 
-Write a file named ```lists/a-no_en-no_sp-no_fr.csv``` that is 
-```lists/a-no_en-no_sp.csv``` without the lines containing words 
+Write a file named ```lists/all-no_en-no_sp-no_fr.csv``` that is 
+```lists/all-no_en-no_sp.csv``` without the lines containing words 
 of ```downloads/french.txt```
 
 **Equivalent shell:**
 
     $ cat downloads/french.txt|grep '^a'| \
-    sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/a_fr_pattern 
-    $ grep -vf /tmp/a_fr_pattern lists/a-no_en-no_sp.csv > lists/a-no_en-no_sp-no_fr.csv
+    sed -e 's:^\\(.*\\):\\^\\1,:' > /tmp/all_fr_pattern 
+    $ grep -vf /tmp/all_fr_pattern lists/all-no_en-no_sp.csv > lists/all-no_en-no_sp-no_fr.csv
 
+### crop10k
 
+Write a file named ```lists/filtered-top-10k.csv``` that is the top 10,000 
+words in frequency from ```lists/all-no_en-no_sp-no_fr.csv```
+
+**Equivalent shell:**
+
+    $ cat lists/all-no_en-no_sp-no_fr.csv| \
+    head -n 10000 > lists/filtered-top-10k.csv
     
+### a-z
+
+Writes two separated csv files for each letter from a to z, 
+each file contains the words from that letter one sorted alphabetically (alpha-a.csv, alpha-b.csv…) and the other sorted by frequency (score-a.csv,
+score-b.csv…).
+
+**Equivalent shell:**
+
+    $ for x in {a..z}; \
+    do grep "^$x" lists/filtered-top-10k.csv > lists/score-$x.csv &&\
+    cat lists/score-$x.csv | sort > lists/alpha-$x.csv; 
+    done
+
+
+Separates
+
 [androidwords]: https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/master/dictionaries/
 [bip39]: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
 [forumthread]: https://bitcointalk.org/index.php?topic=1167861.0
