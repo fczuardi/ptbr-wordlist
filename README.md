@@ -148,9 +148,6 @@ score-b.csv…).
     cat lists/score-$x.csv | sort > lists/alpha-$x.csv; 
     done
 
-
-Separates
-
 [androidwords]: https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/master/dictionaries/
 [bip39]: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
 [forumthread]: https://bitcointalk.org/index.php?topic=1167861.0
